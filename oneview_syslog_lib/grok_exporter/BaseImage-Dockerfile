@@ -1,0 +1,16 @@
+FROM rockylinux/rockylinux
+RUN \
+  dnf install -qy epel-release && \
+  dnf install -qy \
+    'dnf-command(config-manager)' \
+    nc \
+    procps \
+    findutils \
+    supervisor && \
+  dnf config-manager --set-enabled powertools && \
+  dnf clean all
+
+COPY supervisord.conf /etc/supervisord.conf
+RUN chmod 0444 /etc/supervisord.conf
+
+CMD /usr/bin/supervisord -c /etc/supervisord.conf
