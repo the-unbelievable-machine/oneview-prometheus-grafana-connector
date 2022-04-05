@@ -1,5 +1,13 @@
-ARG REGISTRY= 
-FROM ${REGISTRY}/spock_rockylinux:8.5-1
+# docker build args:
+# FROM=                 Use a docker image which supports:
+#                       - dnf (i.e. rockylinux, fedora etc)
+#                       - supervisor is installed and the default command
+#                       - supervisor includes files /etc/supervisord.d/*.service
+# Example:
+# docker build --build-arg FROM=my-base-image .
+ARG FROM=
+
+FROM ${FROM}
 LABEL Maintainer="um"
 LABEL Name="grok_exporter"
 LABEL Version="v1.0.0.RC5"

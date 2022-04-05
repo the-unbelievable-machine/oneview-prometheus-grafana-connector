@@ -1,4 +1,5 @@
-FROM python:3.6-alpine
+ARG FROM=python:3.6-alpine
+FROM ${FROM}
 
 # Set proxy
 ARG http_proxy
