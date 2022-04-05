@@ -1,4 +1,5 @@
 [program:grok-exporter]
+user=grok
 command=/usr/local/bin/grok_exporter -config /etc/grok_exporter/config.yml
 stdout_logfile=/dev/stdout
 stdout_logfile_maxbytes=0
