@@ -32,6 +32,7 @@ COPY config.yml /etc/grok_exporter/config.yml
 COPY patterns/oneview /etc/grok_exporter/patterns/oneview
 
 RUN chown -R grok:grok /etc/grok_exporter \
-    && chown grok:grok /usr/local/bin/grok_exporter
+    && chown grok:grok /usr/local/bin/grok_exporter \
+    && chown root:grok /etc/supervisord.conf /etc/supervisord.d/supervisord-grok-exporter.service
 
 USER grok
