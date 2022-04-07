@@ -6,10 +6,16 @@ ARG http_proxy
 ENV HTTP_PROXY=$http_proxy
 ENV HTTPS_PROXY=$http_proxy
 
+#FIXME: workaround
+RUN urlencodedproxy=$HTTP_PROXY \
+    && urldecodedproxy=$(echo $HTTP_PROXY | sed 's/%23/#/g') \
+    && export HTTP_PROXY=$urldecodedproxy \
+    && export HTTPS_PROXY=$urldecodedproxy \
+    && apk add --no-cache supervisor
+
 #create local passwordless user with own group we run container under
 RUN addgroup -g 2001 ovconnector \
-    && adduser -u 2001 -D -G ovconnector ovconnector \
-    && apk add supervisor
+    && adduser -u 2001 -D -G ovconnector ovconnector
 
 # Copy requirements.txt file to install dependencies
 COPY requirements.txt /plugin/requirements.txt
