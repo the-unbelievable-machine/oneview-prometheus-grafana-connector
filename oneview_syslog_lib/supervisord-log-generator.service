@@ -1,0 +1,7 @@
+[program:log-generator]
+user=ovconnector
+command=python /plugin/main.py -i /conf/config.json
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0

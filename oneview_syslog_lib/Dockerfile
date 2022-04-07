@@ -6,6 +6,11 @@ ARG http_proxy
 ENV HTTP_PROXY=$http_proxy
 ENV HTTPS_PROXY=$http_proxy
 
+#create local passwordless user with own group we run container under
+RUN addgroup -g 2001 ovconnector \
+    && adduser -u 2001 -D -G ovconnector ovconnector \
+    && apk add supervisor
+
 # Copy requirements.txt file to install dependencies
 COPY requirements.txt /plugin/requirements.txt
 COPY packages /plugin/packages
@@ -13,10 +18,20 @@ COPY internal /plugin/internal
 COPY ov_client /plugin/ov_client
 COPY main.py /plugin/main.py
 
-WORKDIR /plugin
-
 # Install Dependencies
-RUN pip install --no-index --find-links=packages -r requirements.txt
+RUN pip install --no-index --find-links=/plugin/packages -r /plugin/requirements.txt
 
-# Run the plugin
-CMD ["python","main.py","-i","/conf/config.json"]
+#custom supervisord config for rootless setup
+COPY supervisord.conf /etc/
+COPY supervisord-log-generator.service /etc/supervisord.d/
+
+#additional fs config needed for rootless setup
+RUN mkdir -p /plugin/logs \
+    && touch /plugin/logs/activity.log \
+    && ln -s /plugin/logs /logs \
+    && ln -s /plugin/logs/activity.log /activity.log \
+    && chown -R ovconnector:ovconnector /plugin \
+    && chown root:ovconnector /etc/supervisord.conf /etc/supervisord.d/supervisord-log-generator.service
+
+USER ovconnector
+ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
