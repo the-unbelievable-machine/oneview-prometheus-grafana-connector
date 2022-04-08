@@ -33,10 +33,11 @@ COPY supervisord-log-generator.service /etc/supervisord.d/
 
 #additional fs config needed for rootless setup
 RUN mkdir -p /plugin/logs /plugin/certs \
-    && touch /plugin/logs/activity.log \
+    && touch /plugin/logs/activity.log /plugin/.timestamp \
     && ln -s /plugin/logs /logs \
     && ln -s /plugin/logs/activity.log /activity.log \
     && ln -s /plugin/certs /certs \
+    && ln -s /plugin/.timestamp /.timestamp \
     && chown -R ovconnector:ovconnector /plugin \
     && chown root:ovconnector /etc/supervisord.conf /etc/supervisord.d/supervisord-log-generator.service
 
