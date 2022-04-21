@@ -96,6 +96,18 @@ metrics:
           resource_name: '{{.oneview_resource_name}}'
           oneview_hostname: '{{.oneview_hostname}}'
           oneview_alert_id: '{{.oneview_alert_id}}'
+          message: '{{.oneview_msg}}'
+
+    - type: gauge
+      name: ov_serverhardware_current_warning_gauge
+      help: Current active server hardware warnings in oneview
+      match: '%{OV_SH_WARNING}'
+      value: '{{if eq .oneview_alert_type "Cleared"}}0{{else}}1{{end}}'
+      labels:
+          resource_name: '{{.oneview_resource_name}}'
+          oneview_hostname: '{{.oneview_hostname}}'
+          oneview_alert_id: '{{.oneview_alert_id}}'
+          message: '{{.oneview_msg}}'
 
     # Metrics for Oneview Interconnects
     - type: counter
